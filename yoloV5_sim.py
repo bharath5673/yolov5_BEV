@@ -16,7 +16,7 @@ output_filename = 'output_video2.mp4'
 # Get the video properties
 width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-# videoOut = cv2.VideoWriter(output_filename, cv2.VideoWriter_fourcc(*'mp4v'), 20, (width, height))
+videoOut = cv2.VideoWriter(output_filename, cv2.VideoWriter_fourcc(*'mp4v'), 20, (width, height))
 
 # track = True
 track = False
@@ -232,7 +232,7 @@ while True:
     simulated_image = add_myCar_overlay(simObjs)
 
 
-    # videoOut.write(simulated_image)
+    videoOut.write(simulated_image)
     # Display the simulated image and frame
     cv2.imshow("Video", frame)
     cv2.imshow("Simulated Objects", simulated_image)
