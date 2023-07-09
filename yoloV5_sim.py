@@ -12,10 +12,6 @@ model.to(device)
 # Load the video
 video = cv2.VideoCapture('videos/test4.mp4')
 output_filename = 'output_video2.mp4'
-
-# Get the video properties
-# width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-# height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 width, height = 1280, 720
 videoOut = cv2.VideoWriter(output_filename, cv2.VideoWriter_fourcc(*'mp4v'), 20, (width, height))
 
