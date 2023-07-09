@@ -37,7 +37,7 @@ This project utilizes the YOLOv5 deep learning model to perform real-time object
 
 For more detailed usage instructions and options, refer to the project documentation.
 
-### Examples
+### Run
 
 ```bash
 pip3 install torch opencv numpy
