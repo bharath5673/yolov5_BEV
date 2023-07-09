@@ -1,4 +1,4 @@
-## YOLOv5 Object Detection with Bird's Eye View
+## YOLOv5 Object Detection with Bird's Eye View and Tracking
 
 This project utilizes the YOLOv5 deep learning model to perform real-time object detection from images or video streams. In addition, it provides a Bird's Eye View (BEV) visualization, which offers a top-down perspective of the detected objects.
 
