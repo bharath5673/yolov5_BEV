@@ -26,7 +26,11 @@ This project utilizes the YOLOv5 deep learning model to perform real-time object
 ### Installation
 
 1. Clone this repository.
-2. Install the required dependencies using `pip install -r requirements.txt`.
+2. Install the required dependencies
+
+```bash
+pip3 install torch opencv numpy
+```
 
 ### Usage
 
@@ -38,10 +42,6 @@ This project utilizes the YOLOv5 deep learning model to perform real-time object
 For more detailed usage instructions and options, refer to the project documentation.
 
 ### Run
-
-```bash
-pip3 install torch opencv numpy
-```
 
 ```bash
 python3 yoloV5_sim.py
