@@ -161,7 +161,7 @@ while True:
             cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), color, 2)
             cv2.putText(frame, object_label, (int(xmin), int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 1)
             centroid_curr_frame.append([(centroid_x, centroid_y), yolo_classes[int(class_id)]])
-            if not track:
+            if track:
                 objs.append([(centroid_x, centroid_y), yolo_classes[int(class_id)]])
 
 
