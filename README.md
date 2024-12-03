@@ -59,5 +59,5 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ### Acknowledgments
 
-- YOLOv5: [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5)
+- YOLO: [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5)
 - OpenCV: [https://opencv.org/](https://opencv.org/)
