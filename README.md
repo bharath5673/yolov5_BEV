@@ -1,19 +1,19 @@
-## YOLO Object Detection for Simple Bird's Eye View and Tracking
+## YOLOv5 Object Detection with Bird's Eye View and Tracking
 
-This project utilizes the YOLO deep learning model to perform real-time object detection for Advanced Driver Assistance Systems (ADAS). It provides a framework for detecting and tracking objects in the context of automotive safety and driver assistance applications. it provides a Bird's Eye View (BEV) visualization, which offers a top-down perspective of the detected objects.
+This project utilizes the YOLOv5 deep learning model to perform real-time object detection for Advanced Driver Assistance Systems (ADAS). It provides a framework for detecting and tracking objects in the context of automotive safety and driver assistance applications. it provides a Bird's Eye View (BEV) visualization, which offers a top-down perspective of the detected objects.
 
 ![demo](demo.gif)
 
 ### Features
 
-- Real-time object detection using the YOLO model.
+- Real-time object detection using the YOLOv5 model.
 - Detection of various objects relevant to ADAS, such as vehicles, pedestrians, cyclists, and traffic signs.
 - Object tracking to maintain continuity and trajectory of detected objects.
 - Bird's Eye View (BEV) visualization of the detected objects in a simulated environment.
 - Customizable confidence threshold and class filtering.
 - Simulated environment provides an intuitive top-down view of object positions and movements.
 - Supports both image and video input for object detection and tracking.
-- Easy integration with pre-trained YOLO models.
+- Easy integration with pre-trained YOLOv5 models.
 - Provides bounding box coordinates, class labels, and tracking IDs for detected objects.
 
 ### Prerequisites
@@ -22,7 +22,6 @@ This project utilizes the YOLO deep learning model to perform real-time object d
 - OpenCV
 - PyTorch
 - NumPy
-- Ultralytics
 
 ### Installation
 
@@ -30,23 +29,22 @@ This project utilizes the YOLO deep learning model to perform real-time object d
 2. Install the required dependencies
 
 ```bash
-pip3 install ultralytics opencv
+pip3 install torch opencv numpy
 ```
 
 ### Usage
 
-1. Download pre-trained YOLO weights or train your own model.
-2. Provide the path to the YOLO weights in the code.
+1. Download pre-trained YOLOv5 weights or train your own model.
+2. Provide the path to the YOLOv5 weights in the code.
 3. Run the script with the video file.
 4. View the object detection results and Bird's Eye View visualization.
-5. supports yolov5 , yolov7, yolov8, yolo11 detecton models
 
 For more detailed usage instructions and options, refer to the project documentation.
 
 ### Run
 
 ```bash
-python3 yolo_sim.py
+python3 yoloV5_sim.py
 ```
 
 ### Contributing
