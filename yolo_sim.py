@@ -1,36 +1,28 @@
 import cv2
 import numpy as np
 import torch
+from ultralytics import YOLO
 import math
 
-# Load the YOLOv5 model
-model_path = 'yolov5s.pt'
+# Load the YOLO model
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path)
+# model = YOLO('yolov5n.pt')  # load an official model
+model = YOLO('yolo11n.pt')  # load an official model
 model.to(device)
+yolo_classes = model.names
+
 
 # Load the video
-video = cv2.VideoCapture('videos/test4.mp4')
+video = cv2.VideoCapture('/home/bharath/Downloads/test_codes/yolo/videos/test4.mp4')
 output_filename = 'output_video2.mp4'
 width, height = 1280, 720
 videoOut = cv2.VideoWriter(output_filename, cv2.VideoWriter_fourcc(*'mp4v'), 20, (width, height))
 
+
+
 # track = True
 track = False
 
-
-
-yolo_classes = [
-    'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-    'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
-    'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee',
-    'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
-    'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
-    'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
-    'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
-    'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
-    'hair drier', 'toothbrush'
-]
 
 
 def overlay_transparent(background, foreground, angle, x, y, objSize=50):
@@ -123,46 +115,57 @@ tracking_id = 0
 while True:
     # Read the next frame
     success, frame = video.read()
-    frame = cv2.resize(frame, (width, height))
-    frame_count += 1
     if not success:
         break
-
-    # Perform object detection on the frame
-    results = model(frame, size=320)
-    detections = results.pred[0]
-    # Create a black image with the same size as the video frames
+    frame = cv2.resize(frame, (width, height))
+    frame_count += 1
     image_ = np.zeros((height, width, 3), dtype=np.uint8)
     simulated_image = image_.copy()
     transformed_image_with_centroids = image_.copy()
     transformed_image_to_sim = image_.copy()
     simObjs = image_.copy()
 
-    objs = []
-    centroid_curr_frame = []
+    # Perform object detection on the frame
 
-    #####################
-    ##  OBJ DETECTION  ##
-    #####################
-    for detection in detections:    
-        xmin    = detection[0]
-        ymin    = detection[1]
-        xmax    = detection[2]
-        ymax    = detection[3]
-        score   = detection[4]
-        class_id= detection[5]
-        centroid_x = int(xmin + xmax) // 2
-        centroid_y =  int(ymin + ymax) // 2
+    results = model.track(frame, verbose=False, device=device)
+    for predictions in results:
+        if predictions is None:
+            continue
 
-        if int(class_id) in [0, 1, 2, 3, 5, 7] and score >= 0.3:
-            # Draw bounding box on the frame
-            color = (0, 0, 255)
-            object_label = f"{class_id}: {score:.2f}"
-            cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), color, 2)
-            cv2.putText(frame, object_label, (int(xmin), int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 1)
-            centroid_curr_frame.append([(centroid_x, centroid_y), yolo_classes[int(class_id)]])
-            if track:
-                objs.append([(centroid_x, centroid_y), yolo_classes[int(class_id)]])
+        # Continue only if boxes and their ids are available
+        if predictions.boxes is None or predictions.boxes.id is None:
+            continue
+
+        objs = []
+        centroid_curr_frame = []
+
+        #####################
+        ##  OBJ DETECTION  ##
+        #####################
+        detections = predictions.boxes
+        # If masks are present, iterate through both bbox and masks
+        if predictions.boxes is not None:
+            for bbox in predictions.boxes:
+                for scores, classes, bbox_coords, id_ in zip(bbox.conf, bbox.cls, bbox.xyxy, bbox.id):
+                    xmin    = bbox_coords[0]
+                    ymin    = bbox_coords[1]
+                    xmax    = bbox_coords[2]
+                    ymax    = bbox_coords[3]
+                    centroid_x = int(xmin + xmax) // 2
+                    centroid_y =  int(ymin + ymax) // 2
+
+                    # Draw rectangle for the bounding box
+                    cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 0, 225), 2)
+
+                    if int(classes) in [0, 1, 2, 3, 5, 7] and scores >= 0.3:
+                        # Draw bounding box on the frame
+                        color = (0, 0, 255)
+                        object_label = f"{classes}: {scores:.2f}"
+                        cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), color, 2)
+                        cv2.putText(frame, object_label, (int(xmin), int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 1)
+                        centroid_curr_frame.append([(centroid_x, centroid_y), yolo_classes[int(classes)]])
+                        if track:
+                            objs.append([(centroid_x, centroid_y), yolo_classes[int(classes)]])
 
 
     #####################
@@ -233,8 +236,9 @@ while True:
     videoOut.write(simulated_image)
     # Display the simulated image and frame
     cv2.imshow("Video", frame)
-    cv2.imshow("Simulated Objects", simulated_image)
-    cv2.imshow('Transformed Frame', transformed_image_with_centroids)
+    if track:
+        cv2.imshow("Simulated Objects", simulated_image)
+        cv2.imshow('Transformed Frame', transformed_image_with_centroids)
     # cv2.imwrite('test.jpg', simulated_image)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
